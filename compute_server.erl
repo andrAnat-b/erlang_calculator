@@ -1,9 +1,10 @@
 -module(compute_server).
--behaviour(supervisor).
+-behaviour(gen_server).
 
 -export([start_link/0, calculate/3]).
 -export([handle_call/3]).
 -export([init/1]).
+-export([handle_cast/2]).
 
 
 start_link() ->
@@ -15,6 +16,8 @@ calculate(Pid, Op, {A, B}) ->
 init(_) ->
     {ok, []}.
 
+handle_cast(_, State) ->
+    {noreply, State}.
 
 handle_call({calculate, plus, {A, B}}, _From, State) ->
     {reply, {ok, A + B}, State};
