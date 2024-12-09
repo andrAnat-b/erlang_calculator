@@ -1,7 +1,7 @@
 -module(compute_server).
 -behaviour(gen_server).
 
--export([start_link/0, calculate/3]).
+-export([start_link/0]).
 -export([handle_call/3]).
 -export([init/1]).
 -export([handle_cast/2]).
@@ -9,9 +9,6 @@
 
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
-
-calculate(Pid, Op, {A, B}) ->
-    gen_server:call(Pid, {calculate, Op, {A, B}}).
 
 init(_) ->
     {ok, []}.

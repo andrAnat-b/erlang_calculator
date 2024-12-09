@@ -1,19 +1,23 @@
 -module(calculator).
--export([start/0, compute/2, get_history/1]).
+-behaviour(application).
+-export([start/2, compute/1, get_history/0, stop/1]).
 
-start() ->
-    {ok, ComputePid} = compute_server:start_link(),
-    {ok, HistoryPid} = history_server:start_link(),
-    {ComputePid, HistoryPid}.
-
-compute({Op, A, B}, {ComputePid, HistoryPid}) ->
-    case compute_server:calculate(ComputePid, Op, {A, B}) of
+start(_,_) ->
+    compute_server:start_link(),
+    history_server:start_link().
+    
+compute({Op, A, B}) ->
+    case gen_server:call(compute_server, {calculate,Op, {A, B}}) of
         {ok, Result} ->
-            history_server:add_entry(HistoryPid, {Op, A, B}, Result),
+            gen_server:cast(history_server, {add_entry, {Op, A, B}, Result}),
             {{Op, A, B}, Result};
         {error, Reason} ->
             {error, Reason}
     end.
 
-get_history({_, HistoryPid}) ->
-    history_server:get_history(HistoryPid).
+get_history() ->
+    gen_server:call(history_server, get_history).
+
+stop(_) ->
+    compute_server:stop(),
+    history_server:stop().
