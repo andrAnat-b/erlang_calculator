@@ -22,8 +22,8 @@ handle_call({calculate, mul, {A, B}}, _From, State) ->
     {reply, {ok, A * B}, State};
 handle_call({calculate, sub, {A, B}}, _From, State) ->
     {reply, {ok, A - B}, State};
-handle_call({calculate, divv, {A, B}}, _From, State) when B =/= 0 ->
-    {reply, {ok, A div B}, State};
+handle_call({calculate, divv, {A, B}}, _From, State) when B =/= 0 -> %% а якщо користувач передасть 0.0 - цей охвираз не спрацює... Він тут не потрібен (let_it_crash)
+    {reply, {ok, A div B}, State}; %% div це ділення без залишку а достатньо було би звичайного '/'
 handle_call({calculate, divv, {_, 0}}, _From, State) ->
     {reply, {error, division_by_zero}, State};
 handle_call(_, _From, State) ->

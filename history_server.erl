@@ -20,7 +20,7 @@ handle_call(_, _From, State) ->
     {reply, error, State};
 
 handle_call({add_entry, Operation, Result},_From, History) ->
-    {reply, [{Operation, Result} | History], History};
+    {reply, [{Operation, Result} | History], History}; %% завдання було обмежити історію 10ма записами
 handle_call(_, _From,State) ->
     {noreply, State}.
 

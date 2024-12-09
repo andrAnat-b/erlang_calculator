@@ -6,7 +6,7 @@ start(_,_) ->
     compute_server:start_link(),
     history_server:start_link().
     
-compute({Op, A, B}) ->
+compute({Op, A, B}) -> %% варто було би зробити щоби компут сервер сам звертався до серверу історії при обчисленнях - тоді це спростить архітектуру
     case gen_server:call(compute_server, {calculate,Op, {A, B}}) of
         {ok, Result} ->
             gen_server:cast(history_server, {add_entry, {Op, A, B}, Result}),
